@@ -1,5 +1,6 @@
 # MVVM 패턴에 대한 이해 및 적용
 
+
 ### Model
 **View 에 표시할 데이터**
 ###
@@ -74,7 +75,20 @@ override fun onResume() {
 
 *https://poqw.github.io/about_mvvm/ 하단부분인데 아직 이해못함..*
 
-##
-참고(https://poqw.github.io/about_mvvm/)
 
-참고(https://medium.com/harrythegreat/jetpack-android-livedata-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0-ed49a6f17de3)
+### [Sample Application Architecture](./SampleProject.md)
+- Koin - 의존성 주입
+- Retrofit - Naver api를 호출하기 위한 Rest Api
+- RxJava - Model에서 데이터를 노출하고, 이벤트를 발생시키기 위해 사용.(Model에 observe하는 주체는 viewModel)
+- LiveData - ViewModel에서 View에 데이터를 노출하고 이벤트를 발생시키기 위해 사용(ViewModel에 observe하는 주체는 view)
+- Databinding - ViewModel과 xml layout간의 데이터를 바인딩 하기 위해 사용
+- Naver API(Shorten url_)
+
+
+
+##
+[참고 1](https://poqw.github.io/about_mvvm/)
+
+[참고 2](https://medium.com/harrythegreat/jetpack-android-livedata-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0-ed49a6f17de3)
+
+[참고 3](https://wonsohana.files.wordpress.com/2019/05/e1848ce185a6e18486e185a9e186a8-e1848be185a5e186b9e18482e185b3e186ab-e18491e185b3e18485e185a6e1848ce185a6e186abe18490e185a6e1848be185b5e18489e185a7e186ab-e1557830458111.png)

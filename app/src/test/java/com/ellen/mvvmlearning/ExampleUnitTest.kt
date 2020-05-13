@@ -1,4 +1,4 @@
-package com.ellen.mvvm_learning
+package com.ellen.mvvmlearning
 
 import org.junit.Test
 

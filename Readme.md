@@ -1,13 +1,13 @@
 # MVVM 패턴에 대한 이해 및 적용
 
 
-### Model
+### 1. Model
 **View 에 표시할 데이터**
 ###
-### View
+### 2. View
 **UI**
 
-어디까지 view에서 처리해야할까?(유저 인터렉션과 라이프사키을을 생각하면 어렵다.)
+어디까지 view에서 처리해야할까?(유저 인터렉션과 라이프사이클을 생각하면 어렵다.)
 ```kotlin
 override fun onResume() {
   super.onResume()
@@ -34,7 +34,7 @@ override fun onResume() {
 }
 ```
 ###
-### ViewModel
+### 3. ViewModel
 **View와 관련된 모든 비즈니스 로직 & Model을 View에 뿌리기 좋게 바꿔줌**
 
 * 중요 한점은 ViewModel은 View에 명령하면 안된다.
@@ -53,6 +53,7 @@ override fun onResume() {
 >  }
 >```
 
+###
 ###
 ### LiveData Model
 (안드로이드에서 제공하는 ViewModel)

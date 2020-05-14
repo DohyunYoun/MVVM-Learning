@@ -9,6 +9,7 @@
 - LiveData - ViewModel에서 View에 데이터를 노출하고 이벤트를 발생시키기 위해 사용(ViewModel에 observe하는 주체는 view)
 - Databinding - ViewModel과 xml layout간의 데이터를 바인딩 하기 위해 사용
 - Naver API(Shorten url_)
+- Snackbar
 
 
 1. app의 build.gradle 설정
@@ -125,18 +126,18 @@
    ```
 4. ViewModel 구현
 ```kotlin
-/**
- * AAC의 ViewModel의 구현체
- * ShortenUrlViewModel의 상위클래스
- *
- * ViewModel은 Model(Repository)이 제공하는 데이터에 subscribe를 하게 되는데,
- * ViewModel이 클리어 되는 시점에 RxJava의 disposable또한 함게 클리어되는 것을 보장해 주기 위한 베이스 클래스
- *
- * (RxJava는 LiveData와 다르게, LifeCycle을 알지 못하기 떄문에
- * ViewModel의 onCleared()가 호출되면 명시적으로 dispose 해주어야 메모리릭을 방지할 수 있다.)
- */
-open class DisposableViewModel: ViewModel() {
 
+open class BaseViewModel: ViewModel() {
+    /**
+     * AAC의 ViewModel의 구현체
+     * ShortenUrlViewModel의 상위클래스
+     *
+     * ViewModel은 Model(Repository)이 제공하는 데이터에 subscribe를 하게 되는데,
+     * ViewModel이 클리어 되는 시점에 RxJava의 disposable또한 함게 클리어되는 것을 보장해 주기 위한 베이스 클래스
+     *
+     * (RxJava는 LiveData와 다르게, LifeCycle을 알지 못하기 떄문에
+     * ViewModel의 onCleared()가 호출되면 명시적으로 dispose 해주어야 메모리릭을 방지할 수 있다.)
+     */
     private val compositeDisposable = CompositeDisposable()
 
     fun addDisposable(disposable: Disposable) {
@@ -147,11 +148,21 @@ open class DisposableViewModel: ViewModel() {
         compositeDisposable.clear()
         super.onCleared()
     }
+
+        /**
+         * 스낵바를 보여주고 싶으면 viewModel 에서 이 함수를 호출
+         */
+        fun showSnackbar(stringResourceId:Int) {
+            snackbarMessage.value = stringResourceId
+        }
+        fun showSnackbar(str:String){
+            snackbarMessageString.value = str
+        }
 }
 ```
 
 ```kotlin
-class ShortenUrlViewModel(private val repository: Repository) : DisposableViewModel() {
+class ShortenUrlViewModel(private val repository: Repository) : BaseViewModel() {
 
     /**
      * ViewModel내부에서는 Mutable한 데이터를 외부에서는 Immutable하게 사용하도록 제약을 주기위해 다음과 같이 LiveData프로퍼티를 노출

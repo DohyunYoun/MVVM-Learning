@@ -12,11 +12,30 @@ import com.ellen.mvvmlearning.databinding.ActivityMainBinding
 import com.ellen.mvvmlearning.viewmodel.ShortenUrlViewModel
 import com.ellen.mvvmlearning.viewmodel.ShortenUrlViewModelFactory
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class MainActivity : BaseActivity<ActivityMainBinding, ShortenUrlViewModel>() {
 
-    override val layoutResourceId: Int = R.layout.activity_main
+    override val layoutResourceId: Int
+        get() = R.layout.activity_main
+
+    /**
+     * 기본 :
+     * ViewModelProvider를 통해 viewModel 클래스 생성
+     * ShortenUrlViewModel이 생성자로 Repository를 받고 있기 때문에, 별도 팩토리 클래스 생성
+     *  ViewModelProviders.of deprecated
+        private val shortenUrlViewModelFactory: ShortenUrlViewModelFactory by inject()
+        val shortenUrlViewModel = ViewModelProviders.of(this, shortenUrlViewModelFactory).get(
+        ShortenUrlViewModel::class.java)
+
+        val shortenUrlViewModel =
+             ViewModelProvider(this, shortenUrlViewModelFactory).get(ShortenUrlViewModel::class.java)
+
+     * koin의 viewModel ext 사용
+     */
+
+    override val viewModel: ShortenUrlViewModel by viewModel()
 
 
     //LiveData 에 콜백 등록
@@ -27,32 +46,22 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 //        })
 
 
-    private val shortenUrlViewModelFactory: ShortenUrlViewModelFactory by inject()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // ViewModelProviders.of deprecated
-        // val shortenUrlViewModel = ViewModelProviders.of(this, shortenUrlViewModelFactory).get(
-        // ShortenUrlViewModel::class.java)
+    override fun init() {
+//        super.onCreate(savedInstanceState)
         /**
-         * ViewModelProvider를 통해 viewModel 클래스 생성
-         * ShortenUrlViewModel이 생성자로 Repository를 받고 있기 때문에, 별도 팩토리 클래스 생성
-         *
          * 각각 clickConvert, error등은 observe 하고 있으나 clickConvert내부에 getShortenUrl은 observe 하고있지 않다.
          */
-        val shortenUrlViewModel =
-            ViewModelProvider(this, shortenUrlViewModelFactory).get(ShortenUrlViewModel::class.java)
 
-        shortenUrlViewModel.clickConvert.observe(this, Observer {
-            shortenUrlViewModel.getShortenUrl(viewDataBinding.urlEditText.text.toString())
+        viewModel.clickConvert.observe(this, Observer {
+            viewModel.getShortenUrl(viewDataBinding.urlEditText.text.toString())
         })
 
-        shortenUrlViewModel.error.observe(this, Observer<String> { t ->
+        viewModel.error.observe(this, Observer<String> { t ->
             Toast.makeText(this@MainActivity, t, Toast.LENGTH_LONG).show()
         })
 
-        shortenUrlViewModel.clickCopyToClipboard.observe(this, Observer { clipUrl ->
+        viewModel.clickCopyToClipboard.observe(this, Observer { clipUrl ->
 //            copyToClipBoard(clipUrl) {
             Toast.makeText(
                 this@MainActivity,
@@ -62,7 +71,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 //            }
         })
 
-        shortenUrlViewModel.clickOpenWeb.observe(this, Observer { clipUrl ->
+        viewModel.clickOpenWeb.observe(this, Observer { clipUrl ->
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(clipUrl)))
         })
 
@@ -73,7 +82,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
          * setLifeCycleOwner로 현재 뷰(this)를 설정해 주고 있어
          * viewModel에서 value를 변경하는 순간 UI가 업데이트 되기 때문에 getShortenUrl을 observe할 필요가 없다.
          */
-        viewDataBinding.shortenUrlViewModel = shortenUrlViewModel
+        viewDataBinding.shortenUrlViewModel = viewModel
         viewDataBinding.setLifecycleOwner(this)
     }
 }

@@ -2,13 +2,14 @@ package com.ellen.mvvmlearning.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.ellen.mvvmlearning.com.ellen.mvvmlearning.base.BaseViewModel
 import com.ellen.mvvmlearning.model.Repository
 import com.ellen.mvvmlearning.utils.SingleLiveEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
-class ShortenUrlViewModel(private val repository: Repository) : DisposableViewModel() {
+class ShortenUrlViewModel(private val repository: Repository) : BaseViewModel() {
 
     /**
      * ViewModel내부에서는 Mutable한 데이터를 외부에서는 Immutable하게 사용하도록 제약을 주기위해 다음과 같이 LiveData프로퍼티를 노출
